@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perkuliahan MHI</title>
+    <link rel="icon" href="https://img.icons8.com/?size=100&id=pdp190Sk7cO8&format=png&color=FFFFFF">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-blue: #2d4f1e; 
+            --accent-pink: #8DA750;
+            --soft-blue: #f1f5e9;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: #ffffff;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+        }
+
+        /* --- UI --- */
+        .header-section {
+            background: linear-gradient(135deg, var(--bg-blue), #4a6d2a);
+            padding: 40px 25px 80px;
+            color: white;
+            border-radius: 0 0 35px 35px;
+            position: relative;
+        }
+
+        .header-top-row {
+            padding-bottom: 0px;
+        }
+
+        .header-top-row h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin: 0; }
+
+        /* --- SLIDER --- */
+        .slider-container {
+            width: calc(100% - 50px);
+            margin: -50px auto 20px;
+            height: 180px;
+            background: #eee;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+            /* Pastikan touch events tidak ter-block */
+            touch-action: pan-y;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Nonaktifkan select teks saat drag */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .slider-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0;
+            /* Cegah drag image bawaan browser */
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.5); border-radius: 50%; transition: 0.3s; }
+        .dot.active { width: 20px; border-radius: 10px; background: white; }
+
+        /* --- BOARD & CARDS --- */
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 18px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .countdown-container {
+            margin: 25px;
+            padding: 22px;
+            background: var(--soft-blue);
+            border-radius: 24px;
+            border-bottom: 4px solid var(--accent-pink);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 25px; }
+        
+        .icon-box { 
+            background: white; 
+            aspect-ratio: 1/1; 
+            border-radius: 24px; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            box-shadow: var(--shadow-sm); 
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .icon-box:active { transform: scale(0.92); background: #fafafa; }
+
+        .list-item {
+            background: white;
+            padding: 18px;
+            border-radius: 20px;
+            margin: 0 20px 15px;
+            border: 1px solid #f0f0f0;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-link {
+            background: var(--accent-pink);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .nim-table { width: calc(100% - 40px); margin: 20px; background: white; border-radius: 15px; overflow: hidden; border-collapse: collapse; box-shadow: var(--shadow-sm); }
+        .nim-table th { background: var(--bg-blue); color: white; padding: 12px; text-align: left; font-size: 14px; }
+        .nim-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 13px; }
+
+        /* --- BOTTOM NAVBAR --- */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 75px;
+            background: var(--bg-blue);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-center {
+            width: 65px; height: 65px;
+            background: var(--white);
+            transform: translateY(-25px);
+            border-radius: 50%;
+            border: 6px solid #f0f2f5;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .page { animation: fadeIn 0.3s; padding-bottom: 100px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #login-screen {
+            background: linear-gradient(135deg, var(--bg-blue), #1e3615);
+            height: 100vh; flex-direction: column; justify-content: center; align-items: center; position: absolute; width: 100%; z-index: 2000; padding: 20px; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="login-screen" style="display: none;">
+            <div class="login-card" style="background: white; padding: 35px 25px; border-radius: 30px; text-align: center; width: 85%; max-width: 320px; box-shadow: var(--shadow-md);">
+                <img src="https://img.icons8.com/?size=100&id=pdp190Sk7cO8&format=png&color=537B2F" style="width: 60px; margin-bottom: 5px;">
+                <h2 style="color:var(--bg-blue); margin-bottom: 5px;">Selamat Datang</h2>
+                <input type="text" id="nameInput" style="width:100%; padding:14px; border-radius:15px; border:2px solid #eee; box-sizing:border-box;" placeholder="Ketik nama kamu...">
+                <button onclick="saveName()" style="background:var(--bg-blue); color:white; border:none; padding:14px; border-radius:15px; margin-top:20px; cursor:pointer; font-weight:bold; width:100%;">MASUK</button>
+                <p style="font-size: 12px; color: #666; margin-top: 20px;">Developed by <b style="color:var(--accent-pink);"><a href="https://haqi127.github.io/Muaz_Portofolio/" target="_blank">Muaz Al Baihaqi</a></b></p>
+            </div>
+        </div>
+
+        <div id="page-home" class="page" style="display:none;">
+            <div class="header-section">
+                <div class="header-top-row" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h1 id="userGreeting">Halo Mahasiswa</h1><br>
+                    <button class="reload-btn-inline" onclick="syncDatabase()" style="background: rgba(255,255,255,0.2); border: none; padding: 10px; border-radius: 12px; cursor: pointer;">
+                        <img src="https://img.icons8.com/?size=100&id=35635&format=png&color=FFFFFF" style="width:22px;">
+                    </button>
+                </div>
+                <!-- PAPAN PENGUMUMAN -->
+                <div class="info-box">
+                    <b style="color:var(--soft-blue); font-size: 14px;">📢 PENGUMUMAN HARI INI</b>
+                    <hr style="opacity: 0.2;">
+                    <div id="live-announcement" style="font-size: 13px; margin-top: 5px; line-height: 1.5;">Menghubungkan...</div>
+                </div>
+            </div>
+                <!-- SLIDER GAMBAR -->
+            <div class="slider-container" id="sliderContainer">
+                <div class="slider-wrapper" id="imageSlider"></div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+                <!-- MENU GRID -->
+            <div class="menu-grid">
+                <div onclick="showPage('jadwal')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=116310&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Jadwal</p></div>
+                <a href="input.html"><div class="icon-box"><img src="https://img.icons8.com/?size=100&id=41414&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Materi</p></div></a>
+                <div onclick="showPage('kelompok')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=115604&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Kelompok</p></div>
+                <div onclick="showPage('nim')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=99194&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">NIM</p></div>
+            </div>
+                <!-- HITUNG MUNDUR -->
+            <div class="countdown-container">
+                <h3 style="color:var(--bg-blue); margin:0; font-size:14px; opacity: 0.8;">Hitung Mundur Perkuliahan</h3>
+                <div id="live-countdown" style="font-weight:700; color:var(--bg-blue); font-size:22px; margin: 5px 0;">-- Hari Lagi</div>
+                <div id="live-date" style="font-size:12px; color:#666;">-- Masehi</div>
+            </div>
+        </div>
+                <!-- HALAMAN LAINNYA (Jadwal, Kelompok, NIM, Tugas, Event) -->
+        <div id="page-jadwal" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Jadwal</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div id="list-jadwal" style="margin-top:20px;"></div>
+        </div>
+            <!-- Contoh struktur data kelompok: [{nama: "Kelompok 1", tugas: "Tugas A", spreadsheet: "https://link-to-spreadsheet.com"}, ...] -->
+        <div id="page-kelompok" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Kelompok</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div id="list-kelompok" style="margin-top:20px;"></div>
+        </div>
+            <!-- Contoh struktur data NIM: [{id: "12345678", nama: "Nama Mahasiswa"}, ...] -->
+        <div id="page-nim" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Data NIM</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <table class="nim-table"><thead><tr><th>NIM</th><th>Nama</th></tr></thead><tbody id="table-nim"></tbody></table>
+        </div>
+            <!-- Contoh struktur data tugas: [{judul: "Tugas 1", deskripsi: "Deskripsi tugas", link: "https://link-to-task.com"}, ...] -->
+        <div id="page-quest" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Tugas</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div id="list-quest" style="margin-top:20px;"></div>
+        </div>
+                <!-- Contoh struktur data event: [{nama: "Event 1", tanggal: "20 Des 2024", link: "https://link-to-event.com"}, ...] -->
+        <div id="page-event" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Event</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div id="list-event" style="margin-top:20px;"></div>
+        </div>
+            <!-- NAVBAR BAWAH -->
+        <div class="nav-bar" id="navbar">
+            <span onclick="showPage('home')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=106097&format=png&color=FFFFFF" style="width:26px;"></span>
+            <span onclick="showPage('quest')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=weajTfKaDT0B&format=png&color=FFFFFF" style="width:26px;"></span>
+            <div class="nav-center">
+                <a id="zoom-link" href="#" target="_blank"><img src="https://img.icons8.com/?size=100&id=zyzNIFhdbPF0&format=png&color=228BE6" style="width:35px;"></a>
+            </div>
+            <span onclick="showPage('event')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=MSGvBvph6QC7&format=png&color=FFFFFF" style="width:26px;"></span>
+            <span onclick="logout()" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=83179&format=png&color=FFFFFF" style="width:26px;"></span>
+        </div>
+    </div>
+
+    <script>
+    const PERMANENT_DB_URL = "https://api.npoint.io/4010da4ce3ed3931dde8";
+    let slideIndex = 0;
+    let totalSlides = 0;
+    let slideInterval;
+    let autoRefreshInterval;
+
+    // =============================================
+    // SWIPE / DRAG SUPPORT UNTUK SLIDER
+    // =============================================
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isDragging = false;
+    let dragStartX = 0;
+    const SWIPE_THRESHOLD = 50; // minimum px untuk dianggap swipe
+
+    function goToSlide(index) {
+        if (totalSlides === 0) return;
+        // Loop: jika lewat ujung, balik ke sisi lain
+        slideIndex = (index + totalSlides) % totalSlides;
+        const wrapper = document.getElementById('imageSlider');
+        const dots = document.querySelectorAll('.dot');
+        if (wrapper) wrapper.style.transform = `translateX(-${slideIndex * 100}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === slideIndex));
+    }
+
+    function initSliderSwipe() {
+        const container = document.getElementById('sliderContainer');
+        if (!container) return;
+
+        // --- TOUCH EVENTS (mobile) ---
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].clientX;
+            // Pause auto-slide saat user menyentuh
+            clearInterval(slideInterval);
+        }, { passive: true });
+
+        container.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) >= SWIPE_THRESHOLD) {
+                if (diff > 0) {
+                    goToSlide(slideIndex + 1); // Geser kiri → gambar berikutnya
+                } else {
+                    goToSlide(slideIndex - 1); // Geser kanan → gambar sebelumnya
+                }
+            }
+            // Resume auto-slide setelah swipe
+            startAutoSlide(totalSlides);
+        }, { passive: true });
+
+        // --- MOUSE DRAG EVENTS (desktop) ---
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStartX = e.clientX;
+            clearInterval(slideInterval);
+            // Nonaktifkan transisi saat drag agar terasa responsif
+            const wrapper = document.getElementById('imageSlider');
+            if (wrapper) wrapper.style.transition = 'none';
+        });
+
+        container.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            const diff = dragStartX - e.clientX;
+            const wrapper = document.getElementById('imageSlider');
+            // Kembalikan transisi
+            if (wrapper) wrapper.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+
+            if (Math.abs(diff) >= SWIPE_THRESHOLD) {
+                if (diff > 0) {
+                    goToSlide(slideIndex + 1);
+                } else {
+                    goToSlide(slideIndex - 1);
+                }
+            }
+            startAutoSlide(totalSlides);
+        });
+
+        // Batalkan drag jika mouse keluar dari container
+        container.addEventListener('mouseleave', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const wrapper = document.getElementById('imageSlider');
+            if (wrapper) wrapper.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            startAutoSlide(totalSlides);
+        });
+    }
+
+    // =============================================
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        const target = document.getElementById('page-' + id);
+        if(target) target.style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    async function syncDatabase() {
+        try {
+            const response = await fetch(PERMANENT_DB_URL + '?nocache=' + new Date().getTime());
+            if (!response.ok) throw new Error("Network response was not ok");
+            const data = await response.json();
+
+            // 1. Slider (Hanya update jika jumlah gambar berubah agar tidak flicker)
+            const slider = document.getElementById('imageSlider');
+            if(data.slider && slider.children.length !== data.slider.length) {
+                const dots = document.getElementById('sliderDots');
+                slider.innerHTML = data.slider.map(img => `<img src="${img}">`).join('');
+                dots.innerHTML = data.slider.map((_, i) => `<div class="dot ${i===0?'active':''}"></div>`).join('');
+                
+                totalSlides = data.slider.length;
+                slideIndex = 0;
+                clearInterval(slideInterval);
+                startAutoSlide(totalSlides);
+            }
+
+            // 2. Data Utama
+            if(data.zoom_url) document.getElementById('zoom-link').href = data.zoom_url;
+            document.getElementById('live-announcement').innerText = data.pengumuman;
+            document.getElementById('live-countdown').innerText = data.hari_lagi + " Hari Lagi";
+            document.getElementById('live-date').innerText = data.tanggal_mulai;
+
+            // 3. Mapping Lists
+            if(data.jadwal) document.getElementById('list-jadwal').innerHTML = data.jadwal.map(j => `<div class="list-item"><div><b style="color:var(--bg-blue)">${j.matkul}</b><br><small>🕒 ${j.jam}</small><br><small>👤 ${j.dosen || '-'}</small></div></div>`).join('');
+            if(data.tugas) document.getElementById('list-quest').innerHTML = data.tugas.map(t => `<div class="list-item"><div><b>${t.judul}</b><br><small>${t.deskripsi}</small></div>${t.link ? `<a href="${t.link}" class="btn-link" target="_blank">LIHAT</a>` : ''}</div>`).join('');
+            if(data.event) document.getElementById('list-event').innerHTML = data.event.map(e => `<div class="list-item"><div><b>${e.nama}</b><br><small>${e.tanggal}</small></div>${e.link ? `<a href="${e.link}" class="btn-link" target="_blank">LIHAT</a>` : ''}</div>`).join('');
+            if(data.kelompok) document.getElementById('list-kelompok').innerHTML = data.kelompok.map(k => `<div class="list-item"><div><b>${k.nama}</b><br><small>${k.tugas}</small></div><a href="${k.spreadsheet}" class="btn-link" target="_blank">DETAIL</a></div>`).join('');
+            if(data.nim) document.getElementById('table-nim').innerHTML = data.nim.map(n => `<tr><td>${n.id}</td><td>${n.nama}</td></tr>`).join('');
+
+            console.log("Data auto-synced at: " + new Date().toLocaleTimeString());
+
+        } catch (e) {
+            console.error("Sync error:", e);
+            if(document.getElementById('live-announcement').innerText === "Menghubungkan...") {
+                document.getElementById('live-announcement').innerText = "Klik Refresh di pojok kanan atas, atau periksa koneksi internet anda.";
+            }
+        }
+    }
+
+    function startAutoSlide(count) {
+        totalSlides = count;
+        clearInterval(slideInterval);
+        if (count <= 1) return; // Tidak perlu auto-slide kalau cuma 1 gambar
+        slideInterval = setInterval(() => {
+            goToSlide(slideIndex + 1);
+        }, 5000);
+    }
+
+    function saveName() {
+        const n = document.getElementById('nameInput').value;
+        if(n) { 
+            localStorage.setItem('namaUser', n); 
+            init();
+        }
+    }
+
+    function logout() {
+        if(confirm("Keluar dan ganti nama?")) { 
+            localStorage.removeItem('namaUser'); 
+            clearInterval(autoRefreshInterval);
+            location.reload(); 
+        }
+    }
+
+    function init() {
+        const user = localStorage.getItem('namaUser');
+        if(user) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('navbar').style.display = 'flex';
+            document.getElementById('userGreeting').innerText = "Halo " + user;
+            showPage('home');
+            
+            // Inisialisasi swipe listener (cukup sekali)
+            initSliderSwipe();
+
+            syncDatabase();
+
+            clearInterval(autoRefreshInterval); 
+            autoRefreshInterval = setInterval(syncDatabase, 5000);
+            
+        } else {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('navbar').style.display = 'none';
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        }
+    }
+    
+    init();
+</script>
+</body>
+</html>
