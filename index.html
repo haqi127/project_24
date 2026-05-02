@@ -62,7 +62,6 @@
             position: relative;
             box-shadow: var(--shadow-md);
             z-index: 10;
-            /* Pastikan touch events tidak ter-block */
             touch-action: pan-y;
         }
 
@@ -70,7 +69,6 @@
             display: flex;
             height: 100%;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Nonaktifkan select teks saat drag */
             user-select: none;
             -webkit-user-select: none;
         }
@@ -80,7 +78,6 @@
             height: 100%;
             object-fit: cover;
             flex-shrink: 0;
-            /* Cegah drag image bawaan browser */
             pointer-events: none;
             -webkit-user-drag: none;
         }
@@ -155,11 +152,34 @@
             text-decoration: none;
             font-size: 11px;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
         }
 
         .nim-table { width: calc(100% - 40px); margin: 20px; background: white; border-radius: 15px; overflow: hidden; border-collapse: collapse; box-shadow: var(--shadow-sm); }
         .nim-table th { background: var(--bg-blue); color: white; padding: 12px; text-align: left; font-size: 14px; }
         .nim-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 13px; }
+
+        /* --- FORM STYLES --- */
+        .form-content { padding: 25px; }
+        .instruction-box {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 5px solid #ffc107;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #856404;
+            border-radius: 10px;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #333; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-family: 'Poppins';
+        }
+        .submit-btn {
+            width: 100%; background-color: var(--bg-blue); color: white; padding: 14px;
+            border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: bold;
+        }
 
         /* --- BOTTOM NAVBAR --- */
         .nav-bar {
@@ -174,6 +194,7 @@
             align-items: center;
             border-radius: 30px 30px 0 0;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
 
         .nav-center {
@@ -203,7 +224,7 @@
                 <h2 style="color:var(--bg-blue); margin-bottom: 5px;">Selamat Datang</h2>
                 <input type="text" id="nameInput" style="width:100%; padding:14px; border-radius:15px; border:2px solid #eee; box-sizing:border-box;" placeholder="Ketik nama kamu...">
                 <button onclick="saveName()" style="background:var(--bg-blue); color:white; border:none; padding:14px; border-radius:15px; margin-top:20px; cursor:pointer; font-weight:bold; width:100%;">MASUK</button>
-                <p style="font-size: 12px; color: #666; margin-top: 20px;">Developed by <b style="color:var(--accent-pink);"><a href="https://haqi127.github.io/Muaz_Portofolio/" target="_blank">Muaz Al Baihaqi</a></b></p>
+                <p style="font-size: 12px; color: #666; margin-top: 20px;">Developed by <b style="color:var(--accent-pink);"><a href="https://www.instagram.com/hikari_12.7.5/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a> Muaz Al Baihaqi</a></b></p>
             </div>
         </div>
 
@@ -215,88 +236,160 @@
                         <img src="https://img.icons8.com/?size=100&id=35635&format=png&color=FFFFFF" style="width:22px;">
                     </button>
                 </div>
-                <!-- PAPAN PENGUMUMAN -->
                 <div class="info-box">
                     <b style="color:var(--soft-blue); font-size: 14px;">📢 PENGUMUMAN HARI INI</b>
                     <hr style="opacity: 0.2;">
                     <div id="live-announcement" style="font-size: 13px; margin-top: 5px; line-height: 1.5;">Menghubungkan...</div>
                 </div>
             </div>
-                <!-- SLIDER GAMBAR -->
             <div class="slider-container" id="sliderContainer">
                 <div class="slider-wrapper" id="imageSlider"></div>
                 <div class="slider-dots" id="sliderDots"></div>
             </div>
-                <!-- MENU GRID -->
             <div class="menu-grid">
                 <div onclick="showPage('jadwal')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=116310&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Jadwal</p></div>
-                <a href="input.html"><div class="icon-box"><img src="https://img.icons8.com/?size=100&id=41414&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Materi</p></div></a>
+                <div onclick="showPage('materi')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=83225&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Input Materi</p></div>
+                <div onclick="showPage('matkul')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=tz1GQBtNqT2P&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Materi</p></div>
+                <div onclick="showPage('quest')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=SOSsf64BLnDT&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Tugas</p></div>
                 <div onclick="showPage('kelompok')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=115604&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">Kelompok</p></div>
                 <div onclick="showPage('nim')" class="icon-box"><img src="https://img.icons8.com/?size=100&id=99194&format=png&color=537B2F" style="width:35px;"><p style="font-size:11px; font-weight:600; margin: 8px 0 0;">NIM</p></div>
             </div>
-                <!-- HITUNG MUNDUR -->
             <div class="countdown-container">
                 <h3 style="color:var(--bg-blue); margin:0; font-size:14px; opacity: 0.8;">Hitung Mundur Perkuliahan</h3>
                 <div id="live-countdown" style="font-weight:700; color:var(--bg-blue); font-size:22px; margin: 5px 0;">-- Hari Lagi</div>
                 <div id="live-date" style="font-size:12px; color:#666;">-- Masehi</div>
             </div>
         </div>
-                <!-- HALAMAN LAINNYA (Jadwal, Kelompok, NIM, Tugas, Event) -->
+
+        <div id="page-materi" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;">
+                <h1>Input Materi</h1>
+                <button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button>
+            </div>
+            <div class="form-content">
+                <div class="instruction-box">
+                    Diharapkan bagi mahasiswa untuk mengupload file di <b>Google Dokumen/OneDrive</b> terlebih dahulu, lalu tempel linknya di sini.
+                </div>
+                <form id="materiForm">
+                    <div class="form-group">
+                        <label>Mata Kuliah:</label>
+                        <input type="text" id="form-matkul" placeholder="Nama mata kuliah" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Dosen:</label>
+                        <input type="text" id="form-dosen" placeholder="Nama dosen pengampu" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pekan ke:</label>
+                        <select id="form-pekan" required>
+                            <option value="">-- Pilih Pekan --</option>
+                            <script>
+                                for (let i = 1; i <= 16; i++) {
+                                    document.write(`<option value="${i}">Pekan ${i}</option>`);
+                                }
+                            </script>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Link Dokumen:</label>
+                        <input type="url" id="form-link" placeholder="https://docs.google.com/..." required>
+                    </div>
+                    <button type="submit" id="btnKirimTelegram" class="submit-btn">KIRIM MATERI</button>
+                </form>
+                <div id="statusMateri" style="text-align:center; margin-top:15px; font-weight:bold; font-size:14px;"></div>
+            </div>
+        </div>
+
+        <!-- HALAMAN MATKUL (MATERI DARI JSON BARU) -->
+        <div id="page-matkul" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Daftar Materi</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div id="list-materi-json" style="margin-top:20px;"></div>
+        </div>
+
         <div id="page-jadwal" class="page" style="display:none;">
             <div class="header-section" style="padding-bottom: 30px;"><h1>Jadwal</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
             <div id="list-jadwal" style="margin-top:20px;"></div>
         </div>
-            <!-- Contoh struktur data kelompok: [{nama: "Kelompok 1", tugas: "Tugas A", spreadsheet: "https://link-to-spreadsheet.com"}, ...] -->
+
         <div id="page-kelompok" class="page" style="display:none;">
             <div class="header-section" style="padding-bottom: 30px;"><h1>Kelompok</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
             <div id="list-kelompok" style="margin-top:20px;"></div>
         </div>
-            <!-- Contoh struktur data NIM: [{id: "12345678", nama: "Nama Mahasiswa"}, ...] -->
+
         <div id="page-nim" class="page" style="display:none;">
-            <div class="header-section" style="padding-bottom: 30px;"><h1>Data NIM</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Data Mahasiswa</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
             <table class="nim-table"><thead><tr><th>NIM</th><th>Nama</th></tr></thead><tbody id="table-nim"></tbody></table>
         </div>
-            <!-- Contoh struktur data tugas: [{judul: "Tugas 1", deskripsi: "Deskripsi tugas", link: "https://link-to-task.com"}, ...] -->
-        <div id="page-quest" class="page" style="display:none;">
-            <div class="header-section" style="padding-bottom: 30px;"><h1>Tugas</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
-            <div id="list-quest" style="margin-top:20px;"></div>
-        </div>
-                <!-- Contoh struktur data event: [{nama: "Event 1", tanggal: "20 Des 2024", link: "https://link-to-event.com"}, ...] -->
+
+        <!-- HALAMAN REPORT (BUG/REQUEST) -->
         <div id="page-event" class="page" style="display:none;">
-            <div class="header-section" style="padding-bottom: 30px;"><h1>Event</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Lapor Bug or Request</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div class="form-content">
+                <div class="instruction-box">Punya kendala atau fitur yang ingin ditambahkan? Kirimkan pesanmu langsung ke Admin di sini.</div>
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label>Subjek:</label>
+                        <select id="report-type" required>
+                            <option value="Bug / Error">Bug or Error</option>
+                            <option value="Request Fitur">Request Fitur</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pesan Anda:</label>
+                        <textarea id="report-message" rows="4" placeholder="Jelaskan detailnya..." required></textarea>
+                    </div>
+                    <button type="submit" id="btnKirimReport" class="submit-btn">KIRIM LAPORAN</button>
+                </form>
+                <div id="statusReport" style="text-align:center; margin-top:15px; font-weight:bold; font-size:14px;"></div>
+            </div>
+        </div>
+
+        <!-- HALAMAN EVENT (NAVIGASI) -->
+        <div id="page-list-event" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Event Mendatang</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
             <div id="list-event" style="margin-top:20px;"></div>
         </div>
-            <!-- NAVBAR BAWAH -->
+
+        <div id="page-quest" class="page" style="display:none;">
+            <div class="header-section" style="padding-bottom: 30px;"><h1>Tugas Kuliah</h1><button class="btn-link" style="background:rgba(255,255,255,0.2)" onclick="showPage('home')">← Kembali</button></div>
+            <div id="list-quest" style="margin-top:20px;"></div>
+        </div>
+
         <div class="nav-bar" id="navbar">
             <span onclick="showPage('home')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=106097&format=png&color=FFFFFF" style="width:26px;"></span>
-            <span onclick="showPage('quest')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=weajTfKaDT0B&format=png&color=FFFFFF" style="width:26px;"></span>
+            <span onclick="showPage('list-event')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=MSGvBvph6QC7&format=png&color=FFFFFF" style="width:26px;"></span>
             <div class="nav-center">
                 <a id="zoom-link" href="#" target="_blank"><img src="https://img.icons8.com/?size=100&id=zyzNIFhdbPF0&format=png&color=228BE6" style="width:35px;"></a>
             </div>
-            <span onclick="showPage('event')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=MSGvBvph6QC7&format=png&color=FFFFFF" style="width:26px;"></span>
+            <span onclick="showPage('event')" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=59730&format=png&color=FFFFFF" style="width:26px;"></span>
             <span onclick="logout()" style="cursor:pointer;"><img src="https://img.icons8.com/?size=100&id=83179&format=png&color=FFFFFF" style="width:26px;"></span>
         </div>
     </div>
 
     <script>
     const PERMANENT_DB_URL = "https://api.npoint.io/4010da4ce3ed3931dde8";
+    const ACADEMIC_DB_URL = "https://api.npoint.io/6d753806933f930618de"; 
+    
+    // KONFIGURASI TELEGRAM (MATERI)
+    const TG_TOKEN = "8798681631:AAFTCdZo-umIBVSzYuLKwu88a8G3lFe3-_4";
+    const TG_CHAT_ID = "7447271812";
+
+    // KONFIGURASI TELEGRAM (BUG REPORT) - Ganti dengan kredensial bot barumu
+    const TG_BUG_TOKEN = "8775522467:AAH7ykgzWW3FK6RodQdSdgM0u05M3d0mhds";
+    const TG_BUG_CHAT_ID = "7447271812";
+
     let slideIndex = 0;
     let totalSlides = 0;
     let slideInterval;
     let autoRefreshInterval;
 
-    // =============================================
-    // SWIPE / DRAG SUPPORT UNTUK SLIDER
-    // =============================================
     let touchStartX = 0;
     let touchEndX = 0;
-    let isDragging = false;
-    let dragStartX = 0;
-    const SWIPE_THRESHOLD = 50; // minimum px untuk dianggap swipe
+    const SWIPE_THRESHOLD = 50;
 
     function goToSlide(index) {
         if (totalSlides === 0) return;
-        // Loop: jika lewat ujung, balik ke sisi lain
         slideIndex = (index + totalSlides) % totalSlides;
         const wrapper = document.getElementById('imageSlider');
         const dots = document.querySelectorAll('.dot');
@@ -307,68 +400,20 @@
     function initSliderSwipe() {
         const container = document.getElementById('sliderContainer');
         if (!container) return;
-
-        // --- TOUCH EVENTS (mobile) ---
         container.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].clientX;
-            // Pause auto-slide saat user menyentuh
             clearInterval(slideInterval);
         }, { passive: true });
-
         container.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].clientX;
             const diff = touchStartX - touchEndX;
-
             if (Math.abs(diff) >= SWIPE_THRESHOLD) {
-                if (diff > 0) {
-                    goToSlide(slideIndex + 1); // Geser kiri → gambar berikutnya
-                } else {
-                    goToSlide(slideIndex - 1); // Geser kanan → gambar sebelumnya
-                }
+                if (diff > 0) goToSlide(slideIndex + 1);
+                else goToSlide(slideIndex - 1);
             }
-            // Resume auto-slide setelah swipe
             startAutoSlide(totalSlides);
         }, { passive: true });
-
-        // --- MOUSE DRAG EVENTS (desktop) ---
-        container.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            dragStartX = e.clientX;
-            clearInterval(slideInterval);
-            // Nonaktifkan transisi saat drag agar terasa responsif
-            const wrapper = document.getElementById('imageSlider');
-            if (wrapper) wrapper.style.transition = 'none';
-        });
-
-        container.addEventListener('mouseup', (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            const diff = dragStartX - e.clientX;
-            const wrapper = document.getElementById('imageSlider');
-            // Kembalikan transisi
-            if (wrapper) wrapper.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-
-            if (Math.abs(diff) >= SWIPE_THRESHOLD) {
-                if (diff > 0) {
-                    goToSlide(slideIndex + 1);
-                } else {
-                    goToSlide(slideIndex - 1);
-                }
-            }
-            startAutoSlide(totalSlides);
-        });
-
-        // Batalkan drag jika mouse keluar dari container
-        container.addEventListener('mouseleave', () => {
-            if (!isDragging) return;
-            isDragging = false;
-            const wrapper = document.getElementById('imageSlider');
-            if (wrapper) wrapper.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            startAutoSlide(totalSlides);
-        });
     }
-
-    // =============================================
 
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
@@ -377,71 +422,140 @@
         window.scrollTo(0,0);
     }
 
+    // FORM MATERI TO TELEGRAM
+    document.getElementById('materiForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnKirimTelegram');
+        const status = document.getElementById('statusMateri');
+        const user = localStorage.getItem('namaUser') || "Mahasiswa";
+
+        const matkul = document.getElementById('form-matkul').value;
+        const dosen = document.getElementById('form-dosen').value;
+        const pekan = document.getElementById('form-pekan').value;
+        const link = document.getElementById('form-link').value;
+
+        const pesan = `<b>📩 INPUT MATERI BARU</b>\n\n` +
+                      `👤 <b>Pengirim:</b> ${user}\n` +
+                      `📚 <b>Matkul:</b> ${matkul}\n` +
+                      `👨‍🏫 <b>Dosen:</b> ${dosen}\n` +
+                      `📅 <b>Pekan:</b> ${pekan}\n` +
+                      `🔗 <b>Link:</b> ${link}`;
+
+        kirimTelegramDinamis(btn, status, pesan, 'materiForm', TG_TOKEN, TG_CHAT_ID);
+    });
+
+    // FORM REPORT TO TELEGRAM (MENGGUNAKAN BOT BUG)
+    document.getElementById('reportForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnKirimReport');
+        const status = document.getElementById('statusReport');
+        const user = localStorage.getItem('namaUser') || "Mahasiswa";
+
+        const type = document.getElementById('report-type').value;
+        const msg = document.getElementById('report-message').value;
+
+        const pesan = `<b>🚩 LAPORAN BUG/REQUEST BARU</b>\n\n` +
+                      `👤 <b>User:</b> ${user}\n` +
+                      `📌 <b>Tipe:</b> ${type}\n` +
+                      `📝 <b>Pesan:</b> ${msg}`;
+
+        kirimTelegramDinamis(btn, status, pesan, 'reportForm', TG_BUG_TOKEN, TG_BUG_CHAT_ID);
+    });
+
+    // FUNGSI KIRIM TELEGRAM UNIVERSAL
+    function kirimTelegramDinamis(btn, status, pesan, formId, token, chatid) {
+        btn.disabled = true;
+        const originalText = btn.innerText;
+        btn.innerText = "Mengirim...";
+        
+        fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatid, text: pesan, parse_mode: 'HTML' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.ok) {
+                status.innerHTML = "<span style='color:green'>✅ Berhasil terkirim!</span>";
+                document.getElementById(formId).reset();
+            } else { throw new Error(); }
+        })
+        .catch(() => {
+            status.innerHTML = "<span style='color:red'>❌ Gagal mengirim pesan.</span>";
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = originalText;
+        });
+    }
+
     async function syncDatabase() {
         try {
-            const response = await fetch(PERMANENT_DB_URL + '?nocache=' + new Date().getTime());
-            if (!response.ok) throw new Error("Network response was not ok");
-            const data = await response.json();
-
-            // 1. Slider (Hanya update jika jumlah gambar berubah agar tidak flicker)
+            const res1 = await fetch(PERMANENT_DB_URL + '?nocache=' + new Date().getTime());
+            const data = await res1.json();
+            
             const slider = document.getElementById('imageSlider');
             if(data.slider && slider.children.length !== data.slider.length) {
                 const dots = document.getElementById('sliderDots');
                 slider.innerHTML = data.slider.map(img => `<img src="${img}">`).join('');
                 dots.innerHTML = data.slider.map((_, i) => `<div class="dot ${i===0?'active':''}"></div>`).join('');
-                
                 totalSlides = data.slider.length;
-                slideIndex = 0;
-                clearInterval(slideInterval);
                 startAutoSlide(totalSlides);
             }
-
-            // 2. Data Utama
             if(data.zoom_url) document.getElementById('zoom-link').href = data.zoom_url;
             document.getElementById('live-announcement').innerText = data.pengumuman;
             document.getElementById('live-countdown').innerText = data.hari_lagi + " Hari Lagi";
             document.getElementById('live-date').innerText = data.tanggal_mulai;
-
-            // 3. Mapping Lists
             if(data.jadwal) document.getElementById('list-jadwal').innerHTML = data.jadwal.map(j => `<div class="list-item"><div><b style="color:var(--bg-blue)">${j.matkul}</b><br><small>🕒 ${j.jam}</small><br><small>👤 ${j.dosen || '-'}</small></div></div>`).join('');
-            if(data.tugas) document.getElementById('list-quest').innerHTML = data.tugas.map(t => `<div class="list-item"><div><b>${t.judul}</b><br><small>${t.deskripsi}</small></div>${t.link ? `<a href="${t.link}" class="btn-link" target="_blank">LIHAT</a>` : ''}</div>`).join('');
             if(data.event) document.getElementById('list-event').innerHTML = data.event.map(e => `<div class="list-item"><div><b>${e.nama}</b><br><small>${e.tanggal}</small></div>${e.link ? `<a href="${e.link}" class="btn-link" target="_blank">LIHAT</a>` : ''}</div>`).join('');
             if(data.kelompok) document.getElementById('list-kelompok').innerHTML = data.kelompok.map(k => `<div class="list-item"><div><b>${k.nama}</b><br><small>${k.tugas}</small></div><a href="${k.spreadsheet}" class="btn-link" target="_blank">DETAIL</a></div>`).join('');
             if(data.nim) document.getElementById('table-nim').innerHTML = data.nim.map(n => `<tr><td>${n.id}</td><td>${n.nama}</td></tr>`).join('');
 
-            console.log("Data auto-synced at: " + new Date().toLocaleTimeString());
+            const res2 = await fetch(ACADEMIC_DB_URL + '?nocache=' + new Date().getTime());
+            const dataAcademic = await res2.json();
+            
+            if(dataAcademic.tugas) {
+                document.getElementById('list-quest').innerHTML = dataAcademic.tugas.map(t => `
+                    <div class="list-item">
+                        <div>
+                            <b>${t.judul}</b><br>
+                            <small>👨‍🏫 Dosen: ${t.dosen || '-'}</small><br>
+                            <small>${t.deskripsi}</small>
+                        </div>
+                        ${t.link ? `<a href="${t.link}" class="btn-link" target="_blank">LIHAT</a>` : ''}
+                    </div>`).join('');
+            }
 
+            if(dataAcademic.materi) {
+                document.getElementById('list-materi-json').innerHTML = dataAcademic.materi.map(m => `
+                    <div class="list-item">
+                        <div>
+                            <b style="color:var(--bg-blue)">${m.matkul}</b><br>
+                            <small>👨‍🏫 Dosen: ${m.dosen || '-'}</small><br>
+                            <small>Pekan ${m.pekan}</small>
+                        </div>
+                        <a href="${m.link}" class="btn-link" target="_blank">BUKA</a>
+                    </div>`).join('');
+            }
         } catch (e) {
             console.error("Sync error:", e);
-            if(document.getElementById('live-announcement').innerText === "Menghubungkan...") {
-                document.getElementById('live-announcement').innerText = "Klik Refresh di pojok kanan atas, atau periksa koneksi internet anda.";
-            }
         }
     }
 
     function startAutoSlide(count) {
         totalSlides = count;
         clearInterval(slideInterval);
-        if (count <= 1) return; // Tidak perlu auto-slide kalau cuma 1 gambar
-        slideInterval = setInterval(() => {
-            goToSlide(slideIndex + 1);
-        }, 5000);
+        if (count <= 1) return;
+        slideInterval = setInterval(() => { goToSlide(slideIndex + 1); }, 5000);
     }
 
     function saveName() {
         const n = document.getElementById('nameInput').value;
-        if(n) { 
-            localStorage.setItem('namaUser', n); 
-            init();
-        }
+        if(n) { localStorage.setItem('namaUser', n); init(); }
     }
 
     function logout() {
-        if(confirm("Keluar dan ganti nama?")) { 
-            localStorage.removeItem('namaUser'); 
-            clearInterval(autoRefreshInterval);
-            location.reload(); 
-        }
+        if(confirm("Keluar dan ganti nama?")) { localStorage.removeItem('namaUser'); location.reload(); }
     }
 
     function init() {
@@ -451,19 +565,12 @@
             document.getElementById('navbar').style.display = 'flex';
             document.getElementById('userGreeting').innerText = "Halo " + user;
             showPage('home');
-            
-            // Inisialisasi swipe listener (cukup sekali)
             initSliderSwipe();
-
             syncDatabase();
-
-            clearInterval(autoRefreshInterval); 
-            autoRefreshInterval = setInterval(syncDatabase, 5000);
-            
+            autoRefreshInterval = setInterval(syncDatabase, 30000);
         } else {
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('navbar').style.display = 'none';
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
         }
     }
     
